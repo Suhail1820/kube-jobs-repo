@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Apply the Kubernetes job
-      command: kubectl apply -f /path/to/kube-jobs-repo/manifests/job.yaml
+      command: kubectl apply -f "D:/project/kube-jobs-repo/manifests/job.yaml"
       register: job_deployment
 
     - name: Verify job deployment
