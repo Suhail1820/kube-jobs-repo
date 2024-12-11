@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        KUBE_CONFIG = '/path/to/kubeconfig'  // Adjust path to your kubeconfig
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-repository/kube-jobs-repo.git'
+            }
+        }
+
+        stage('Create EKS Cluster') {
+            steps {
+                script {
+                    sh 'ansible-playbook ansible/playbooks/create-eks.yml'
+                }
+            }
+        }
+
+        stage('Deploy Job') {
+            steps {
+                script {
+                    sh 'ansible-playbook ansible/playbooks/deploy-k8s-job.yml'
+                }
+            }
+        }
+
+        stage('Cleanup Job') {
+            steps {
+                script {
+                    sh 'ansible-playbook ansible/playbooks/cleanup.yml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+    }
+}
