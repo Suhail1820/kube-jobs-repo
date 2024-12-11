@@ -1,0 +1,16 @@
+---
+- name: Deploy Kubernetes Job
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Apply the Kubernetes job
+      command: kubectl apply -f /path/to/kube-jobs-repo/manifests/job.yaml
+      register: job_deployment
+
+    - name: Verify job deployment
+      command: kubectl get jobs
+      register: job_status
+
+    - name: Display job status
+      debug:
+        var: job_status
