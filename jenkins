@@ -12,11 +12,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'jenkins-s', variable: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IlQ5cXRjY0hXSzZSalYzRk9lMlRrYW5NcTlMUXRsdUtPNzhYa1JGc3BrR1EifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzM3MTE4MDIyLCJpYXQiOjE3MzM5ODYwMjIsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiMTkxZjdhMzQtMDA5MC00OWE4LWE2MGItMTc1NzNjYmUwY2Q5Iiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJqZW5raW5zIiwic2VydmljZWFjY291bnQiOnsibmFtZSI6ImplbmtpbnMiLCJ1aWQiOiIxZDYzNTQzZS1mNWFiLTQzMzctOThiNy1mYzA2MmFhZDc4ZGUifX0sIm5iZiI6MTczMzk4NjAyMiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmplbmtpbnM6amVua2lucyJ9.YODnpXRAuIQR1LY4qffrnifBzsQNGTymeTL4zdawBx8e4KFly88kYyCOEn6NZdHWGXlFEc8rropxlrm1TfndKwrX_WoEej5IiY2szY_6yL63DTiNN-lx0Bon2hmEYbC1AdEWHwQIRr7R81MM7N3HmcJTVjUjSJLylRymvNAV4qcFU_89HlPFJZmzD8DNGZAv33qR0A7noKv9p0SaeBFKm_bD5Z5tWwleRdtg-2avAuQM2AztwMIL-JvO5hTKWtKXkMVpWwqtBkH0X_08ZZ9MsjlGRTlYsvBvri5SSqrr-4vk3SGqrKhklvOs_NZB5-9OXkS48YVJr6CqGOPzKXgp0g')]) {
+                    withCredentials([string(credentialsId: 'jenkins-s', variable: 'KUBE_TOKEN')]) {
                         sh """
                             kubectl config set-credentials jenkins --token=${KUBE_TOKEN}
                             kubectl config set-context --current --user=jenkins
-                            kubectl apply -f manifests/job.yaml
+                            kubectl apply -f kube-jobs-repo/manifests/job.yaml
                         """
                     }
                 }
