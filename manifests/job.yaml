@@ -8,6 +8,6 @@ spec:
       containers:
       - name: example-container
         image: busybox
-        command: ["echo", "Checking the CICD setup"]
+        command: ["echo", "Checking the CICD setups"]
       restartPolicy: Never
   backoffLimit: 4
