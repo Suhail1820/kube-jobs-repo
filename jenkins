@@ -24,7 +24,7 @@ pipeline {
                             kubectl config use-context jenkins-context
                             
                             # Fetch and apply the job.yaml from GitHub
-                            kubectl apply -f kube-jobs-repo/manifests/job.yaml
+                            kubectl apply -f /manifests/job.yaml
                         """
                     }
                 }
