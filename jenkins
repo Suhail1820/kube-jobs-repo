@@ -13,7 +13,7 @@ pipeline {
                 ]
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy Job to Kubernetes') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'jenkins-sec', variable: 'KUBE_TOKEN')]) {
@@ -22,10 +22,9 @@ pipeline {
                             kubectl config set-credentials jenkins --token=${KUBE_TOKEN}
                             kubectl config set-context jenkins-context --user=jenkins --cluster=minikube
                             kubectl config use-context jenkins-context
-                            
-                            # Fetch and apply the job.yaml from GitHub
-                            kubectl apply -f manifests/job.yaml --validate=false
 
+                            # Apply the job.yaml file from the specified path in the cluster
+                            kubectl apply -f /home/admin/job.yaml
                         """
                     }
                 }
