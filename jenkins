@@ -12,7 +12,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'jenkins-secret', variable: 'KUBE_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'jenkins-sec', variable: 'KUBE_TOKEN')]) {
                         sh """
                             kubectl config set-credentials jenkins --token=${KUBE_TOKEN}
                             kubectl config set-context --current --user=jenkins
