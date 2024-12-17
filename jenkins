@@ -8,8 +8,8 @@ pipeline {
             steps {
                 checkout scm: [
                     $class: 'GitSCM',
-                    branches: [[name: 'refs/heads/main']],  // Specify the branch here
-                    userRemoteConfigs: [[url: 'https://github.com/your-repository-url']]
+                    branches: [[name: 'refs/heads/main']],  // Branch is correctly set to 'main'
+                    userRemoteConfigs: [[url: 'https://github.com/Suhail1820/kube-jobs-repo.git']]
                 ]
             }
         }
