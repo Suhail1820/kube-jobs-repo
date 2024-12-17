@@ -6,7 +6,11 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scm
+                checkout scm: [
+                    $class: 'GitSCM',
+                    branches: [[name: 'refs/heads/main']],  // Specify the branch here
+                    userRemoteConfigs: [[url: 'https://github.com/your-repository-url']]
+                ]
             }
         }
         stage('Deploy to Kubernetes') {
