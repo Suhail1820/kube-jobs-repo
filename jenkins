@@ -1,42 +1,33 @@
 pipeline {
     agent any
-    triggers {
-        pollSCM('* * * * *') // Poll the repository every minute for changes
+
+    environment {
+        // Set KUBECONFIG to /home/admin/.kube/config
+        KUBECONFIG = '/home/admin/.kube/config'
     }
+
     stages {
-        stage('Checkout Code') {
+        stage('Checkout SCM') {
             steps {
-                checkout scm: [
-                    $class: 'GitSCM',
-                    branches: [[name: 'refs/heads/main']],  // Branch is correctly set to 'main'
-                    userRemoteConfigs: [[url: 'https://github.com/Suhail1820/kube-jobs-repo.git']]
-                ]
+                checkout scm
             }
         }
+
         stage('Deploy Job to Kubernetes') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'jenkins-sect', variable: 'KUBE_TOKEN')]) {
-                        sh """
-                            # Set the Kubernetes credentials and context
-                            kubectl config set-credentials jenkins --token=${KUBE_TOKEN}
-                            kubectl config set-context jenkins-context --user=jenkins --cluster=minikube
-                            kubectl config use-context jenkins-context
+                withCredentials([file(credentialsId: 'kube-conf', variable: 'KUBECONFIG_FILE')]) {
+                    script {
+                        // Copy the kubeconfig file from Jenkins credentials to the desired path
+                        sh 'mkdir -p /home/admin/.kube && cp $KUBECONFIG_FILE $KUBECONFIG'
 
-                            # Apply the job.yaml file from the specified path in the cluster
+                        // Use kubectl with the provided kubeconfig file
+                        sh '''
+                            kubectl config use-context jenkins-context
                             kubectl apply -f /home/admin/job.yaml
-                        """
+                        '''
                     }
                 }
             }
-        }
-    }
-    post {
-        success {
-            echo "Deployment successful!"
-        }
-        failure {
-            echo "Deployment failed!"
         }
     }
 }
