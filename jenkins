@@ -2,30 +2,31 @@ pipeline {
     agent any
 
     environment {
-        // Directly set the KUBECONFIG environment variable to the path where the kubeconfig file will be placed
-        KUBECONFIG = '/home/admin/.kube/config'
+        KUBECONFIG = credentials('kube-conf') // Use the credentials ID for your kubeconfig
     }
 
     stages {
-        stage('Checkout SCM') {
+        stage('Checkout') {
             steps {
-                checkout scm
+                // Checkout the code from your GitHub repository
+                git 'https://github.com/Suhail1820/kube-jobs-repo.git'
             }
         }
-
-        stage('Deploy Job to Kubernetes') {
+        
+        stage('Apply Kubernetes Job') {
             steps {
-                withCredentials([file(credentialsId: 'kube-conf', variable: 'KUBECONFIG_FILE')]) {
-                    script {
-                        // Use kubectl with the provided kubeconfig file directly
-                        sh '''
-                            cp $KUBECONFIG_FILE $KUBECONFIG
-                            kubectl config use-context jenkins-context
-                            kubectl apply -f /home/admin/job.yaml
-                        '''
-                    }
-                }
+                // Apply the Kubernetes job manifest to the cluster
+                sh 'kubectl apply -f manifests/job.yaml'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Kubernetes job applied successfully.'
+        }
+        failure {
+            echo 'Failed to apply the Kubernetes job.'
         }
     }
 }
