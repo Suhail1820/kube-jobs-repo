@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Set KUBECONFIG to /home/admin/.kube/config
+        // Directly set the KUBECONFIG environment variable to the path where the kubeconfig file will be placed
         KUBECONFIG = '/home/admin/.kube/config'
     }
 
@@ -17,11 +17,9 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kube-conf', variable: 'KUBECONFIG_FILE')]) {
                     script {
-                        // Copy the kubeconfig file from Jenkins credentials to the desired path
-                        sh 'mkdir -p /home/admin/.kube && cp $KUBECONFIG_FILE $KUBECONFIG'
-
-                        // Use kubectl with the provided kubeconfig file
+                        // Use kubectl with the provided kubeconfig file directly
                         sh '''
+                            cp $KUBECONFIG_FILE $KUBECONFIG
                             kubectl config use-context jenkins-context
                             kubectl apply -f /home/admin/job.yaml
                         '''
