@@ -8,8 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from your GitHub repository
-                git 'https://github.com/Suhail1820/kube-jobs-repo.git'
+                // Checkout the code from your GitHub repository and specify the 'main' branch
+                git branch: 'main', url: 'https://github.com/Suhail1820/kube-jobs-repo.git'
             }
         }
         
