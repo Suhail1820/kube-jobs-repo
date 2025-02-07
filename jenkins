@@ -23,7 +23,7 @@ pipeline {
 
     post {
         success {
-            echo 'Kubernetes job applied successfully.'
+            echo 'Kubernetes job applied successfully.' # should run successfully
         }
         failure {
             echo 'Failed to apply the Kubernetes job.'
